@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+flake8_rapport/
+.env
+.vscode/
+data/
+specifications-techniques.pdf
