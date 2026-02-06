@@ -6,3 +6,4 @@ flake8_rapport/
 .vscode/
 data/
 specifications-techniques.pdf
+.DS_Store

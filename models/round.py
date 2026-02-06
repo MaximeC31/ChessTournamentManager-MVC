@@ -3,35 +3,27 @@ from typing import TypedDict
 
 
 class RoundData(TypedDict):
-    """Schema for Round dictionary representation."""
     name: str
     start_datetime: str
     end_datetime: str | None
 
 
 class Round:
-    """Represents a tournament round."""
 
     def __init__(
         self,
         name: str,
-        start_datetime: datetime | None = None,
-        end_datetime: datetime | None = None,
+        start_datetime: datetime,
+        end_datetime: datetime | None,
     ) -> None:
-        """
-        Initialize a Round instance.
-        If start_datetime is not provided, it defaults to the current time.
-        """
         self.name = name
-        self.start_datetime = start_datetime or datetime.now()
+        self.start_datetime = start_datetime
         self.end_datetime = end_datetime
 
-    def end_round(self) -> None:
-        """Mark the round as finished by setting the end datetime."""
-        self.end_datetime = datetime.now()
+    def end_round(self, value: datetime) -> None:
+        self.end_datetime = value
 
     def to_dict(self) -> RoundData:
-        """Serialize the Round instance to a dictionary."""
         return {
             "name": self.name,
             "start_datetime": self.start_datetime.isoformat(),
@@ -40,7 +32,6 @@ class Round:
 
     @classmethod
     def from_dict(cls, data: RoundData) -> "Round":
-        """Create a Round instance from a dictionary representation."""
         start_str = data["start_datetime"]
         end_str = data.get("end_datetime")
 
