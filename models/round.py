@@ -1,11 +1,13 @@
 from datetime import datetime
 from typing import TypedDict
+from models.match import Match
 
 
 class RoundData(TypedDict):
     name: str
     start_datetime: str
     end_datetime: str | None
+    matches: list[Match]
 
 
 class Round:
@@ -14,10 +16,12 @@ class Round:
         self,
         name: str,
         start_datetime: datetime,
-        end_datetime: datetime | None,
+        matches: list[Match],
+        end_datetime: datetime | None = None,
     ) -> None:
         self.name = name
         self.start_datetime = start_datetime
+        self.matches = matches
         self.end_datetime = end_datetime
 
     def end_round(self, value: datetime) -> None:
@@ -28,15 +32,16 @@ class Round:
             "name": self.name,
             "start_datetime": self.start_datetime.isoformat(),
             "end_datetime": self.end_datetime.isoformat() if self.end_datetime else None,
+            "matches": [match.to_dict() for match in self.matches],
         }
 
     @classmethod
     def from_dict(cls, data: RoundData) -> "Round":
-        start_str = data["start_datetime"]
-        end_str = data.get("end_datetime")
-
         return cls(
             name=data["name"],
-            start_datetime=datetime.fromisoformat(start_str),
-            end_datetime=datetime.fromisoformat(end_str) if end_str else None,
+            start_datetime=datetime.fromisoformat(data["start_datetime"]),
+            matches=[Match.from_dict(match_data) for match_data in data["matches"]],
+            end_datetime=(
+                datetime.fromisoformat(data["end_datetime"]) if data["end_datetime"] else None
+            ),
         )
