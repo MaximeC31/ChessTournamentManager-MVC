@@ -1,4 +1,4 @@
-from models.player import Player
+from models.entities.player import Player
 from typing import Any
 
 

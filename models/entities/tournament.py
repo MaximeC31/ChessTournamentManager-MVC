@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import TypedDict, Any
 
-from models.player import Player
-from models.round import Round
+from models.entities.player import Player
+from models.entities.round import Round
 
 
 class TournamentData(TypedDict):

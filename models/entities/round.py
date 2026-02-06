@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import TypedDict
-from models.match import Match
+from models.entities.match import Match
 
 
 class RoundData(TypedDict):
