@@ -7,7 +7,6 @@ classDiagram
         +str first_name
         +str birth_date
         +str national_id
-        +__init__(last_name, first_name, birth_date, national_id)
         +validate_national_id(value) str
         +to_dict() dict
         +from_dict(data) Player
@@ -21,6 +20,15 @@ classDiagram
         +end_round()
         +to_dict() RoundData
         +from_dict(data) Round
+    }
+
+    class Match {
+        +Player player_1
+        +Player player_2
+        +float score_1
+        +float score_2
+        +set_result(result)
+        +to_tuple() tuple
     }
 
     class Tournament {
@@ -39,4 +47,6 @@ classDiagram
 
     Tournament "1" *-- "many" Round
     Tournament "1" *-- "many" Player
+    Round "1" *-- "many" Match
+    Match "1" o-- "2" Player
 ```
