@@ -1,14 +1,14 @@
-from views.main_view import MainView
+from typing import Any
 
 
 class MainController:
 
     def __init__(self) -> None:
-        self.view = MainView()
+        self.view: Any = None  # À implémenter : Initialiser la vue principale
 
     def run(self) -> None:
         while True:
-            choice = self.view.display_main_menu()
+            choice: str = self.view.method()  # À implémenter : Récupérer le choix de l'utilisateur
 
             match choice:
                 case "1":

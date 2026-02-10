@@ -17,15 +17,15 @@ class BaseManager:
 
     def _save_all(self) -> None:
         os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
-        with open(self.file_path, "w") as f:
-            json.dump([instance.to_dict() for instance in self.data], f, indent=4)
+        with open(self.file_path, "w") as file:
+            json.dump([instance.to_dict() for instance in self.data], file, indent=4)
 
     def _load_data(self) -> list[Any]:
         if not os.path.exists(self.file_path):
             return []
 
-        with open(self.file_path, "r") as f:
-            data_list = json.load(f)
+        with open(self.file_path, "r") as file:
+            data_list = json.load(file)
             return [self.model_class.from_dict(data) for data in data_list]
 
     def get_all(self) -> list[Any]:

@@ -1,20 +1,8 @@
 from datetime import datetime
-from typing import TypedDict, Any
+from typing import Any
 
 from models.entities.player import Player
 from models.entities.round import Round
-
-
-class TournamentData(TypedDict):
-    name: str
-    venue: str
-    start_date: str
-    end_date: str | None
-    description: str
-    number_of_rounds: int
-    current_round_number: int
-    rounds: list[Any]
-    players: list[Any]
 
 
 class Tournament:
@@ -29,7 +17,7 @@ class Tournament:
         current_round_number: int,
         rounds: list[Round],
         players: list[Player],
-        number_of_rounds: int = 4,
+        number_of_rounds: int,
     ) -> None:
         self.name = name
         self.venue = venue
@@ -41,28 +29,26 @@ class Tournament:
         self.players = players
         self.number_of_rounds = number_of_rounds
 
-    def to_dict(self) -> TournamentData:
+    def to_dict(self) -> Any:
         return {
             "name": self.name,
             "venue": self.venue,
             "start_date": self.start_date.isoformat(),
             "end_date": self.end_date.isoformat() if self.end_date else None,
             "description": self.description,
-            "number_of_rounds": self.number_of_rounds,
             "current_round_number": self.current_round_number,
-            "rounds": [r.to_dict() for r in self.rounds],
-            "players": [p.to_dict() for p in self.players],
+            "rounds": [round.to_dict() for round in self.rounds],
+            "players": [player.to_dict() for player in self.players],
+            "number_of_rounds": self.number_of_rounds,
         }
 
     @classmethod
-    def from_dict(cls, data: TournamentData) -> "Tournament":
-        end_date_str = data["end_date"]
-
+    def from_dict(cls, data: Any) -> "Tournament":
         return cls(
             name=data["name"],
             venue=data["venue"],
             start_date=datetime.fromisoformat(data["start_date"]),
-            end_date=datetime.fromisoformat(end_date_str) if end_date_str else None,
+            end_date=datetime.fromisoformat(data["end_date"]) if data["end_date"] else None,
             description=data["description"],
             current_round_number=data["current_round_number"],
             rounds=[Round.from_dict(r) for r in data["rounds"]],
