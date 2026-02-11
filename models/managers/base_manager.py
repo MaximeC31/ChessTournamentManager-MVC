@@ -5,9 +5,9 @@ from typing import Any
 
 class BaseManager:
 
-    def __init__(self, file_path: str, model_class: Any) -> None:
-        self.file_path = file_path
+    def __init__(self, model_class: Any) -> None:
         self.model_class = model_class
+        self.file_path = f"data/{self.model_class.__name__.lower()}s.json"
         self.data = self._load_data()
 
     def save(self, instance: Any) -> None:
@@ -26,7 +26,7 @@ class BaseManager:
 
         with open(self.file_path, "r") as file:
             data_list = json.load(file)
-            return [self.model_class.from_dict(data) for data in data_list]
+            return [self.model_class(**data) for data in data_list]
 
     def get_all(self) -> list[Any]:
         return self.data

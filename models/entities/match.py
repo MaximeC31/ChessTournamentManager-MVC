@@ -36,13 +36,12 @@ class Match:
         }
 
     @classmethod
-    def from_tuple(cls, data: tuple[list[Any], list[Any]]) -> "Match":
-        """Reconstruit un Match à partir du format tuple des specs."""
+    def from_tuple(cls, data: Any) -> "Match":
         player_1_data, score_1 = data[0]
         player_2_data, score_2 = data[1]
         return cls(
-            player_1=Player.from_dict(player_1_data),
-            player_2=Player.from_dict(player_2_data),
+            player_1=Player(**player_1_data),
+            player_2=Player(**player_2_data),
             score_1=float(score_1),
             score_2=float(score_2),
         )

@@ -25,12 +25,3 @@ class Player:
             "birth_date": self.birth_date,
             "national_id": self.national_id,
         }
-
-    @classmethod
-    def from_dict(cls, data: dict[str, str]) -> "Player":
-        return cls(
-            last_name=data["last_name"],
-            first_name=data["first_name"],
-            birth_date=data["birth_date"],
-            national_id=data["national_id"],
-        )

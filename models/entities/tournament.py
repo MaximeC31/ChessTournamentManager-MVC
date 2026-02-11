@@ -11,22 +11,24 @@ class Tournament:
         self,
         name: str,
         venue: str,
-        start_date: datetime,
-        end_date: datetime | None,
+        start_date: str | datetime,
+        end_date: str | datetime | None,
         description: str,
         current_round_number: int,
-        rounds: list[Round],
-        players: list[Player],
+        rounds: list[Any],
+        players: list[Any],
         number_of_rounds: int,
     ) -> None:
         self.name = name
         self.venue = venue
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = (
+            datetime.fromisoformat(start_date) if isinstance(start_date, str) else start_date
+        )
+        self.end_date = datetime.fromisoformat(end_date) if isinstance(end_date, str) else end_date
         self.description = description
         self.current_round_number = current_round_number
-        self.rounds = rounds
-        self.players = players
+        self.rounds = [r if isinstance(r, Round) else Round(**r) for r in rounds]
+        self.players = [p if isinstance(p, Player) else Player(**p) for p in players]
         self.number_of_rounds = number_of_rounds
 
     def to_dict(self) -> Any:
@@ -41,17 +43,3 @@ class Tournament:
             "players": [player.to_dict() for player in self.players],
             "number_of_rounds": self.number_of_rounds,
         }
-
-    @classmethod
-    def from_dict(cls, data: Any) -> "Tournament":
-        return cls(
-            name=data["name"],
-            venue=data["venue"],
-            start_date=datetime.fromisoformat(data["start_date"]),
-            end_date=datetime.fromisoformat(data["end_date"]) if data["end_date"] else None,
-            description=data["description"],
-            current_round_number=data["current_round_number"],
-            rounds=[Round.from_dict(r) for r in data["rounds"]],
-            players=[Player.from_dict(p) for p in data["players"]],
-            number_of_rounds=data["number_of_rounds"],
-        )

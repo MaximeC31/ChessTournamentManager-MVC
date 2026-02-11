@@ -8,14 +8,20 @@ class Round:
     def __init__(
         self,
         name: str,
-        matches: list[Match],
-        start_datetime: datetime,
-        end_datetime: datetime | None = None,
+        matches: list[Any],
+        start_datetime: str | datetime,
+        end_datetime: str | datetime | None = None,
     ) -> None:
         self.name = name
-        self.matches = matches
-        self.start_datetime = start_datetime
-        self.end_datetime = end_datetime
+        self.matches = [m if isinstance(m, Match) else Match.from_tuple(m) for m in matches]
+        self.start_datetime = (
+            datetime.fromisoformat(start_datetime)
+            if isinstance(start_datetime, str)
+            else start_datetime
+        )
+        self.end_datetime = (
+            datetime.fromisoformat(end_datetime) if isinstance(end_datetime, str) else end_datetime
+        )
 
     def end_round(self, value: datetime) -> None:
         self.end_datetime = value
@@ -27,14 +33,3 @@ class Round:
             "start_datetime": self.start_datetime.isoformat(),
             "end_datetime": self.end_datetime.isoformat() if self.end_datetime else None,
         }
-
-    @classmethod
-    def from_dict(cls, data: Any) -> "Round":
-        return cls(
-            name=data["name"],
-            matches=[Match.from_tuple(match_data) for match_data in data["matches"]],
-            start_datetime=datetime.fromisoformat(data["start_datetime"]),
-            end_datetime=(
-                datetime.fromisoformat(data["end_datetime"]) if data["end_datetime"] else None
-            ),
-        )
