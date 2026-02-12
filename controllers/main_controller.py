@@ -1,14 +1,15 @@
-from typing import Any
+from views.main_view import MainView
+import sys
 
 
 class MainController:
 
     def __init__(self) -> None:
-        self.view: Any = None  # À implémenter : Initialiser la vue principale
+        self.view = MainView()
 
     def run(self) -> None:
         while True:
-            choice: str = self.view.method()  # À implémenter : Récupérer le choix de l'utilisateur
+            choice: str = self.view.display_main_menu()
 
             match choice:
                 case "1":
@@ -21,16 +22,21 @@ class MainController:
                     self.exit_application()
                     break
                 case _:
-                    pass  # À implémenter : Gérer les choix invalides
+                    self.view.display_message("Choix invalide, veuillez réessayer.")
 
     def handle_players_menu(self) -> None:
+        self.view.display_message("Gérer les joueurs")
         pass  # À implémenter : Gérer le menu des joueurs
 
     def handle_tournaments_menu(self) -> None:
+        self.view.display_message("Gérer les tournois")
         pass  # À implémenter : Gérer le menu des tournois
 
     def handle_reports_menu(self) -> None:
+        self.view.display_message("Gérer les rapports")
         pass  # À implémenter : Gérer le menu des rapports
 
     def exit_application(self) -> None:
-        pass  # À implémenter : Gérer la fermeture de l'application
+        self.view.display_message("Échec et Mat, application terminée !")
+        sys.exit(0)
+        pass  # À implémenter : Effectuer les opérations de nettoyage avant de quitter
