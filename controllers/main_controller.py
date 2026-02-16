@@ -1,5 +1,6 @@
-from views.main_view import MainView
 import sys
+from views.main_view import MainView
+from controllers.player_controller import PlayerController
 
 
 class MainController:
@@ -25,8 +26,8 @@ class MainController:
                     self.view.display_message("Choix invalide, veuillez réessayer.")
 
     def handle_players_menu(self) -> None:
-        self.view.display_message("Gérer les joueurs")
-        pass  # À implémenter : Gérer le menu des joueurs
+        player_controller = PlayerController()
+        player_controller.run()
 
     def handle_tournaments_menu(self) -> None:
         self.view.display_message("Gérer les tournois")

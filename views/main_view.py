@@ -3,7 +3,7 @@ class MainView:
     RESET = "\033[0m"
 
     def display_main_menu(self) -> str:
-        print(f"{self.GREY}Menu Principal")
+        print(f"{self.GREY}=== MENU PRINCIPAL ===")
         print("1 - Gérer les joueurs")
         print("2 - Gérer les tournois")
         print("3 - Gérer les rapports")
