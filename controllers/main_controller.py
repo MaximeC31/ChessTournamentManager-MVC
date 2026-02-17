@@ -41,4 +41,3 @@ class MainController:
     def exit_application(self) -> None:
         self.view.display_message("Échec et Mat, application terminée !")
         sys.exit(0)
-        pass  # À implémenter : Effectuer les opérations de nettoyage avant de quitter
