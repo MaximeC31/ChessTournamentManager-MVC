@@ -1,6 +1,7 @@
 import sys
 from views.main_view import MainView
 from controllers.player_controller import PlayerController
+from controllers.tournament_controller import TournamentController
 
 
 class MainController:
@@ -30,8 +31,8 @@ class MainController:
         player_controller.run()
 
     def handle_tournaments_menu(self) -> None:
-        self.view.display_message("Gérer les tournois")
-        pass  # À implémenter : Gérer le menu des tournois
+        tournament_controller = TournamentController()
+        tournament_controller.run()
 
     def handle_reports_menu(self) -> None:
         self.view.display_message("Gérer les rapports")
