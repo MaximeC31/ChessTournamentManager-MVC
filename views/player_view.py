@@ -16,8 +16,8 @@ class PlayerView:
 
     def prompt_player_info(self) -> dict[str, str]:
         player_info: dict[str, str] = {
-            "last_name": input("Entrez le nom du joueur : "),
             "first_name": input("Entrez le prénom du joueur : "),
+            "last_name": input("Entrez le nom du joueur : "),
             "birth_date": input("Entrez la date de naissance du joueur (YYYY-MM-DD) : "),
             "national_id": input("Entrez l'identifiant national du joueur : "),
         }
@@ -32,8 +32,20 @@ class PlayerView:
     def prompt_player_national_id(self) -> str:
         return input("Entrez l'identifiant national du joueur : ")
 
-    def display_message(self, message: str) -> None:
-        print(message)
+    def display_invalid_choice(self) -> None:
+        print("Choix invalide, veuillez réessayer.")
 
-    def display_error(self, error: str) -> None:
-        print(f"Erreur : {error}")
+    def display_player_added(self, player: Player) -> None:
+        print(f"Joueur {player.first_name} {player.last_name} ajouté avec succès !")
+
+    def display_player_add_error(self, error: Exception) -> None:
+        print(f"Erreur lors de l'ajout du joueur : {error}")
+
+    def display_no_players_found(self) -> None:
+        print("Aucun joueur trouvé.")
+
+    def display_player_not_found(self) -> None:
+        print("Erreur : Aucun joueur trouvé avec cet identifiant.")
+
+    def display_player_deleted(self, player: Player) -> None:
+        print(f"Joueur {player.first_name} {player.last_name} supprimé avec succès !")

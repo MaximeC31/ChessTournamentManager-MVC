@@ -12,5 +12,8 @@ class MainView:
         choice = input("Veuillez entrer votre choix : ")
         return choice
 
-    def display_message(self, message: str) -> None:
-        print(message)
+    def display_invalid_choice(self) -> None:
+        print("Choix invalide, veuillez réessayer.")
+
+    def display_exit_message(self) -> None:
+        print("Échec et Mat, application terminée !")

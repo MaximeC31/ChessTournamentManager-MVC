@@ -24,7 +24,7 @@ class MainController:
                     self.exit_application()
                     break
                 case _:
-                    self.view.display_message("Choix invalide, veuillez réessayer.")
+                    self.view.display_invalid_choice()
 
     def handle_players_menu(self) -> None:
         player_controller = PlayerController()
@@ -35,9 +35,8 @@ class MainController:
         tournament_controller.run()
 
     def handle_reports_menu(self) -> None:
-        self.view.display_message("Gérer les rapports")
         pass  # À implémenter : Gérer le menu des rapports
 
     def exit_application(self) -> None:
-        self.view.display_message("Échec et Mat, application terminée !")
+        self.view.display_exit_message()
         sys.exit(0)

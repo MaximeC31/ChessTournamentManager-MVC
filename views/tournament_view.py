@@ -16,13 +16,27 @@ class TournamentView:
     def prompt_match_result(self, p1: Player, p2: Player) -> str:
         print(f"{p1.first_name} {p1.last_name} VS {p2.first_name} {p2.last_name}")
         while True:
-            result = input("Entrez le résultat (1 victoire J1, 2 victoire J2, draw Match nul) : ")
+            result = input(
+                f"Entrez le résultat (1 victoire {p1.first_name} {p1.last_name}, 2 victoire {p2.first_name} {p2.last_name}, draw Match nul) : "
+            )
 
             if result not in ["1", "2", "draw"]:
                 print("Entrée invalide. Veuillez entrer 1, 2 ou draw.")
                 continue
 
             return result
+
+    def display_invalid_choice(self) -> None:
+        print("Choix invalide, veuillez réessayer.")
+
+    def display_round_name(self, round_name: str) -> None:
+        print(f"--- {round_name} ---")
+
+    def display_match_winner(self, winner: Player) -> None:
+        print(f"Vainqueur {winner.first_name} {winner.last_name} !")
+
+    def display_match_draw(self) -> None:
+        print("Match nul !")
 
     def display_message(self, message: str) -> None:
         print(message)

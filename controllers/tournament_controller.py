@@ -30,22 +30,20 @@ class TournamentController:
                     players = BaseManager(Player).get_all()
 
                     new_round = self.create_first_round(players)
-                    self.view.display_message(new_round.name)
+                    self.view.display_round_name(new_round.name)
 
                     for match in new_round.matches:
                         winner = self.input_match_result(match)
 
                         if winner is None:
-                            self.view.display_message("Match nul !")
+                            self.view.display_match_draw()
                             continue
 
-                        self.view.display_message(
-                            f"Vainqueur {winner.first_name} {winner.last_name} !"
-                        )
+                        self.view.display_match_winner(winner)
                 case "0":
                     break
                 case _:
-                    self.view.display_message("Choix invalide, veuillez réessayer.")
+                    self.view.display_invalid_choice()
 
     def create_first_round(self, players: list[Player]) -> Round:
         shuffled_players = list(players)

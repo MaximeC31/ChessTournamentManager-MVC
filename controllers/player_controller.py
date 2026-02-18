@@ -25,24 +25,22 @@ class PlayerController:
                 case "0":
                     break
                 case _:
-                    self.view.display_message("Choix invalide, veuillez réessayer.")
+                    self.view.display_invalid_choice()
 
     def add_player(self) -> None:
         try:
-            player: dict[str, str] = self.view.prompt_player_info()
-            new_player = Player(**player)
+            player_data: dict[str, str] = self.view.prompt_player_info()
+            new_player = Player(**player_data)
             self.manager.save(new_player)
-            self.view.display_message(
-                f"Joueur {new_player.first_name} {new_player.last_name} ajouté avec succès !"
-            )
+            self.view.display_player_added(new_player)
         except ValueError as e:
-            self.view.display_error(f"Erreur lors de l'ajout du joueur : {e}")
+            self.view.display_player_add_error(e)
 
     def list_players(self) -> None:
         players: list[Player] = self.manager.get_all()
 
         if not players:
-            self.view.display_message("Aucun joueur trouvé.")
+            self.view.display_no_players_found()
             return
 
         self.view.display_players(players)
@@ -58,7 +56,7 @@ class PlayerController:
                 break
 
         if target_player is None:
-            self.view.display_message("Aucun joueur trouvé avec cet identifiant.")
+            self.view.display_player_not_found()
             return
 
         self.view.display_players([target_player])
@@ -74,10 +72,8 @@ class PlayerController:
                 break
 
         if target_player is None:
-            self.view.display_message("Erreur : Aucun joueur trouvé avec cet identifiant.")
+            self.view.display_player_not_found()
             return
 
         self.manager.delete(target_player)
-        self.view.display_message(
-            f"Joueur {target_player.first_name} {target_player.last_name} supprimé avec succès !"
-        )
+        self.view.display_player_deleted(target_player)
