@@ -13,7 +13,9 @@ class Round:
         end_datetime: str | datetime | None = None,
     ) -> None:
         self.name = name
-        self.matches = [m if isinstance(m, Match) else Match.from_tuple(m) for m in matches]
+        self.matches: list[Any] = [
+            m if isinstance(m, Match) else Match.from_tuple(m) for m in matches
+        ]
         self.start_datetime = (
             datetime.fromisoformat(start_datetime)
             if isinstance(start_datetime, str)

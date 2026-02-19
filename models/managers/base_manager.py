@@ -7,8 +7,12 @@ class BaseManager:
 
     def __init__(self, model_class: Any) -> None:
         self.model_class = model_class
-        self.file_path = f"data/{self.model_class.__name__.lower()}s.json"
+        self.file_path = self.create_file_path()
         self.data = self._load_data()
+
+    def create_file_path(self) -> str:
+        os.makedirs(os.path.dirname("data/"), exist_ok=True)
+        return f"data/{self.model_class.__name__.lower()}s.json"
 
     def save(self, instance: Any) -> None:
         if instance not in self.data:
@@ -24,9 +28,12 @@ class BaseManager:
         if not os.path.exists(self.file_path):
             return []
 
-        with open(self.file_path, "r") as file:
-            data_list = json.load(file)
-            return [self.model_class(**data) for data in data_list]
+        try:
+            with open(self.file_path, "r") as file:
+                data_list = json.load(file)
+                return [self.model_class(**data) for data in data_list]
+        except (json.JSONDecodeError, FileNotFoundError):
+            return []
 
     def get_all(self) -> list[Any]:
         return self.data

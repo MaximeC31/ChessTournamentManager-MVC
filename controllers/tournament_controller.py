@@ -1,6 +1,8 @@
 from models.entities.match import Match
 from models.entities.round import Round
 from models.entities.player import Player
+from models.entities.tournament import Tournament
+from models.managers.base_manager import BaseManager
 from views.tournament_view import TournamentView
 from datetime import datetime
 import random
@@ -10,6 +12,8 @@ class TournamentController:
 
     def __init__(self) -> None:
         self.view = TournamentView()
+        self.tournament_manager: BaseManager = BaseManager(Tournament)
+        self.player_manager: BaseManager = BaseManager(Player)
 
     def run(self) -> None:
         while True:
@@ -25,9 +29,8 @@ class TournamentController:
                     # TODO: Implémenter le lancement/reprise d'un tournoi
                     pass
                 case "4":
-                    from models.managers.base_manager import BaseManager
-
-                    players = BaseManager(Player).get_all()
+                    # TODO: Supprimer le code de test ci-dessous après avoir fini le flow
+                    players = self.player_manager.get_all()
 
                     new_round = self.create_first_round(players)
                     self.view.display_round_name(new_round.name)
