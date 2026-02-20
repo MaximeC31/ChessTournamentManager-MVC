@@ -13,11 +13,16 @@ class TournamentView:
         choice: str = input("Choisissez une option : ")
         return choice
 
-    def prompt_match_result(self, p1: Player, p2: Player) -> str:
-        print(f"{p1.first_name} {p1.last_name} VS {p2.first_name} {p2.last_name}")
+    def prompt_match_result(self, p1: Player, p2: Player | None) -> str:
+        p2_name = f"{p2.first_name} {p2.last_name}" if p2 else "BYE"
+        print(f"{p1.first_name} {p1.last_name} VS {p2_name}")
+
+        if p2 is None:
+            return "1"
+
         while True:
             result = input(
-                f"Entrez le résultat (1 victoire {p1.first_name} {p1.last_name}, 2 victoire {p2.first_name} {p2.last_name}, draw Match nul) : "
+                f"Entrez le résultat (1 victoire {p1.first_name} {p1.last_name}, 2 victoire {p2_name}, draw Match nul) : "
             )
 
             if result not in ["1", "2", "draw"]:

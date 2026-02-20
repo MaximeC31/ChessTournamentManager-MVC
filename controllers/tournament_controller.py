@@ -48,6 +48,13 @@ class TournamentController:
                 case _:
                     self.view.display_invalid_choice()
 
+    def input_match_result(self, match: Match) -> Player | None:
+        if match.player_2 is None:
+            return match.player_1
+
+        choice = self.view.prompt_match_result(match.player_1, match.player_2)
+        return match.set_result(choice)
+
     def create_first_round(self, players: list[Player]) -> Round:
         shuffled_players = list(players)
         random.shuffle(shuffled_players)
@@ -59,7 +66,3 @@ class TournamentController:
 
         new_round = Round(name="Round 1", matches=matches, start_datetime=datetime.now())
         return new_round
-
-    def input_match_result(self, match: Match) -> Player | None:
-        choice = self.view.prompt_match_result(match.player_1, match.player_2)
-        return match.set_result(choice)
