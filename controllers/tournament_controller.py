@@ -22,8 +22,7 @@ class TournamentController:
                 case "1":
                     self.create_tournament()
                 case "2":
-                    # TODO: Implémenter la liste des tournois
-                    pass
+                    self.list_tournaments()
                 case "3":
                     # TODO: Implémenter le lancement/reprise d'un tournoi
                     pass
@@ -31,6 +30,25 @@ class TournamentController:
                     break
                 case _:
                     self.view.display_invalid_choice()
+
+    def input_match_result(self, match: Match) -> Player | None:
+        if match.player_2 is None:
+            return match.player_1
+
+        choice = self.view.prompt_match_result(match.player_1, match.player_2)
+        return match.set_result(choice)
+
+    def create_first_round(self, players: list[Player]) -> Round:
+        shuffled_players = list(players)
+        random.shuffle(shuffled_players)
+
+        matches = [
+            Match(shuffled_players[i], shuffled_players[i + 1], 0.0, 0.0)
+            for i in range(0, len(shuffled_players), 2)
+        ]
+
+        new_round = Round(name="Round 1", matches=matches, start_datetime=datetime.now())
+        return new_round
 
     def create_tournament(self) -> None:
         players = self.player_manager.get_all()
@@ -65,21 +83,6 @@ class TournamentController:
                     f"Erreur de données : {e}. Veuillez recommencer la saisie."
                 )
 
-    def input_match_result(self, match: Match) -> Player | None:
-        if match.player_2 is None:
-            return match.player_1
-
-        choice = self.view.prompt_match_result(match.player_1, match.player_2)
-        return match.set_result(choice)
-
-    def create_first_round(self, players: list[Player]) -> Round:
-        shuffled_players = list(players)
-        random.shuffle(shuffled_players)
-
-        matches = [
-            Match(shuffled_players[i], shuffled_players[i + 1], 0.0, 0.0)
-            for i in range(0, len(shuffled_players), 2)
-        ]
-
-        new_round = Round(name="Round 1", matches=matches, start_datetime=datetime.now())
-        return new_round
+    def list_tournaments(self) -> None:
+        tournament_list = self.tournament_manager.get_all()
+        self.view.display_tournaments(tournament_list)

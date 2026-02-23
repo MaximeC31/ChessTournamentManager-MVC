@@ -1,4 +1,5 @@
 from models.entities.player import Player
+from models.entities.tournament import Tournament
 
 
 class TournamentView:
@@ -45,6 +46,20 @@ class TournamentView:
                 return selected_players
             except (ValueError, IndexError):
                 print("Entrée invalide. Veuillez entrer des indices valides ou 'all'.")
+
+    def display_tournaments(self, tournaments: list[Tournament]) -> None:
+        if not tournaments:
+            print("Aucun tournoi trouvé.")
+            return
+
+        print("Liste des tournois :")
+        for tournament in tournaments:
+            end_date = (
+                tournament.end_date.strftime("%Y-%m-%d") if tournament.end_date else "En cours"
+            )
+            print(
+                f"- {tournament.name} | Lieu: {tournament.venue} | Dates: {tournament.start_date.strftime('%Y-%m-%d')} - {end_date}"
+            )
 
     def prompt_match_result(self, p1: Player, p2: Player | None) -> str:
         p2_name = f"{p2.first_name} {p2.last_name}" if p2 else "BYE"
