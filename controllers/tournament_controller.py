@@ -26,6 +26,8 @@ class TournamentController:
                 case "3":
                     # TODO: Implémenter le lancement/reprise d'un tournoi
                     pass
+                case "4":
+                    self.delete_tournament()
                 case "0":
                     break
                 case _:
@@ -86,3 +88,13 @@ class TournamentController:
     def list_tournaments(self) -> None:
         tournament_list = self.tournament_manager.get_all()
         self.view.display_tournaments(tournament_list)
+
+    def delete_tournament(self) -> None:
+        tournaments = self.tournament_manager.get_all()
+        tournament_to_delete = self.view.select_tournament(tournaments)
+
+        if tournament_to_delete:
+            self.tournament_manager.delete(tournament_to_delete)
+            self.view.display_tournament_deleted(tournament_to_delete.name)
+        else:
+            self.view.display_deletion_cancelled()

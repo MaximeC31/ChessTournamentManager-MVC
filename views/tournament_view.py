@@ -9,6 +9,7 @@ class TournamentView:
         print("1. Créer un tournoi")
         print("2. Lister les tournois")
         print("3. Lancer/Reprendre un tournoi")
+        print("4. Supprimer un tournoi")
         print("0. Retour au menu principal")
 
         choice: str = input("Choisissez une option : ")
@@ -61,6 +62,28 @@ class TournamentView:
                 f"- {tournament.name} | Lieu: {tournament.venue} | Dates: {tournament.start_date.strftime('%Y-%m-%d')} - {end_date}"
             )
 
+    def select_tournament(self, tournaments: list[Tournament]) -> Tournament | None:
+        if not tournaments:
+            print("Aucun tournoi disponible.")
+            return None
+
+        print("Sélectionnez un tournoi :")
+        for idx, tournament in enumerate(tournaments, start=1):
+            print(f"{idx}. {tournament.name}")
+
+        while True:
+            choice = input("Entrez le numéro du tournoi (ou 0 pour annuler) : ").strip()
+
+            if choice == "0":
+                return None
+
+            if choice.isdigit():
+                index = int(choice) - 1
+                if 0 <= index < len(tournaments):
+                    return tournaments[index]
+
+            print("Choix invalide. Veuillez entrer un numéro valide ou 0 pour annuler.")
+
     def prompt_match_result(self, p1: Player, p2: Player | None) -> str:
         p2_name = f"{p2.first_name} {p2.last_name}" if p2 else "BYE"
         print(f"{p1.first_name} {p1.last_name} VS {p2_name}")
@@ -78,6 +101,12 @@ class TournamentView:
                 continue
 
             return result
+
+    def display_tournament_deleted(self, name: str) -> None:
+        print(f"Tournoi '{name}' supprimé.")
+
+    def display_deletion_cancelled(self) -> None:
+        print("Suppression annulée.")
 
     def display_invalid_choice(self) -> None:
         print("Choix invalide, veuillez réessayer.")
