@@ -20,33 +20,50 @@ class TournamentController:
             choice = self.view.display_menu()
             match choice:
                 case "1":
-                    # TODO: Implémenter la création de tournoi
-                    pass
+                    self.create_tournament()
                 case "2":
                     # TODO: Implémenter la liste des tournois
                     pass
                 case "3":
                     # TODO: Implémenter le lancement/reprise d'un tournoi
                     pass
-                case "4":
-                    # TODO: Supprimer le code de test ci-dessous après avoir fini le flow
-                    players = self.player_manager.get_all()
-
-                    new_round = self.create_first_round(players)
-                    self.view.display_round_name(new_round.name)
-
-                    for match in new_round.matches:
-                        winner = self.input_match_result(match)
-
-                        if winner is None:
-                            self.view.display_match_draw()
-                            continue
-
-                        self.view.display_match_winner(winner)
                 case "0":
                     break
                 case _:
                     self.view.display_invalid_choice()
+
+    def create_tournament(self) -> None:
+        players = self.player_manager.get_all()
+        if len(players) < 2:
+            self.view.display_message("Il faut au moins 2 joueurs pour créer un tournoi.")
+            return
+
+        while True:
+            tournament_info = self.view.prompt_tournament_data()
+            selected_players = self.view.select_players(players)
+
+            raw_end_date = str(tournament_info["end_date"]).strip()
+            final_end_date: str | None = raw_end_date if raw_end_date else None
+
+            try:
+                new_tournament = Tournament(
+                    name=str(tournament_info["name"]),
+                    venue=str(tournament_info["venue"]),
+                    start_date=str(tournament_info["start_date"]),
+                    end_date=final_end_date,
+                    description=str(tournament_info["description"]),
+                    current_round_number=int(tournament_info["current_round_number"]),
+                    rounds=[],
+                    players=selected_players,
+                    number_of_rounds=int(tournament_info["rounds"]),
+                )
+                self.tournament_manager.save(new_tournament)
+                self.view.display_message(f"Tournoi '{new_tournament.name}' créé avec succès !")
+                break
+            except ValueError as e:
+                self.view.display_message(
+                    f"Erreur de données : {e}. Veuillez recommencer la saisie."
+                )
 
     def input_match_result(self, match: Match) -> Player | None:
         if match.player_2 is None:

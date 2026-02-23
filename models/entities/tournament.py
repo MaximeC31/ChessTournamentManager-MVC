@@ -19,7 +19,7 @@ class Tournament:
         current_round_number: int,
         rounds: list[Any],
         players: list[Any],
-        number_of_rounds: int,
+        number_of_rounds: int = 4,
     ) -> None:
         self.name = name
         self.venue = venue

@@ -13,6 +13,39 @@ class TournamentView:
         choice: str = input("Choisissez une option : ")
         return choice
 
+    def prompt_tournament_data(self) -> dict[str, str | int]:
+        print("Créer un nouveau tournoi :")
+        input_data: dict[str, str | int] = {}
+
+        input_data["name"] = input("Nom du tournoi : ")
+        input_data["venue"] = input("Lieu du tournoi : ")
+        input_data["start_date"] = input("Date de début (YYYY-MM-DD) : ")
+        input_data["end_date"] = input("Date de fin (YYYY-MM-DD, optionnel) : ")
+        input_data["description"] = input("Description du tournoi : ")
+        rounds_input = input("Nombre de tours (défaut 4) : ")
+        input_data["rounds"] = int(rounds_input) if rounds_input.isdigit() else 4
+        input_data["current_round_number"] = 0
+
+        return input_data
+
+    def select_players(self, players: list[Player]) -> list[Player]:
+        print("Liste des joueurs disponibles :")
+        for idx, player in enumerate(players, start=1):
+            print(f"{idx}. {player.first_name} {player.last_name}")
+
+        while True:
+            selection = input("Sélectionnez les joueurs (ex: 1,3,4 ou 'all') : ").strip()
+
+            if selection.lower() == "all":
+                return players
+
+            try:
+                selected_indices = [int(idx.strip()) for idx in selection.split(",")]
+                selected_players = [players[idx - 1] for idx in selected_indices]
+                return selected_players
+            except (ValueError, IndexError):
+                print("Entrée invalide. Veuillez entrer des indices valides ou 'all'.")
+
     def prompt_match_result(self, p1: Player, p2: Player | None) -> str:
         p2_name = f"{p2.first_name} {p2.last_name}" if p2 else "BYE"
         print(f"{p1.first_name} {p1.last_name} VS {p2_name}")
