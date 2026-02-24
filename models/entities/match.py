@@ -18,7 +18,9 @@ class Match:
 
     def set_result(self, result: str) -> Player | None:
         if self.player_2 is None:
-            raise ValueError("Impossible de modifier un match Bye")
+            self.score_1 = 1.0
+            self.score_2 = 0.0
+            return self.player_1
 
         match result:
             case "1":
@@ -44,7 +46,7 @@ class Match:
     def to_dict(self) -> dict[str, Any]:
         return {
             "player_1": self.player_1.to_dict(),
-            "player_2": None if self.player_2 is None else self.player_2.to_dict(),
+            "player_2": self.player_2.to_dict() if self.player_2 else None,
             "score_1": self.score_1,
             "score_2": self.score_2,
         }
@@ -56,7 +58,7 @@ class Match:
 
         return cls(
             player_1=Player(**player_1_data),
-            player_2=None if player_2_data is None else Player(**player_2_data),
+            player_2=Player(**player_2_data) if player_2_data else None,
             score_1=float(score_1),
             score_2=float(score_2),
         )

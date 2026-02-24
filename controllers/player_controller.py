@@ -46,34 +46,25 @@ class PlayerController:
         self.view.display_players(players)
 
     def search_player(self) -> None:
-        player_national_id: str = self.view.prompt_player_national_id()
-        players: list[Player] = self.manager.get_all()
+        target_player = self._find_player_by_id()
 
-        target_player = None
-        for player in players:
-            if player.national_id == player_national_id:
-                target_player = player
-                break
-
-        if target_player is None:
-            self.view.display_player_not_found()
-            return
-
-        self.view.display_players([target_player])
+        if target_player:
+            self.view.display_players([target_player])
 
     def delete_player(self) -> None:
+        target_player = self._find_player_by_id()
+
+        if target_player:
+            self.manager.delete(target_player)
+            self.view.display_player_deleted(target_player)
+
+    def _find_player_by_id(self) -> Player | None:
         player_id = self.view.prompt_player_national_id()
         players = self.manager.get_all()
 
-        target_player = None
         for player in players:
             if player.national_id == player_id:
-                target_player = player
-                break
+                return player
 
-        if target_player is None:
-            self.view.display_player_not_found()
-            return
-
-        self.manager.delete(target_player)
-        self.view.display_player_deleted(target_player)
+        self.view.display_player_not_found()
+        return None

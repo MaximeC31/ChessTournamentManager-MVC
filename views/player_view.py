@@ -23,23 +23,18 @@ class PlayerView:
         }
         return player_info
 
-    def display_players(self, players: list[Player]) -> None:
-        for player in players:
-            print(
-                f"ID: {player.national_id} | {player.first_name} {player.last_name} {player.birth_date}"
-            )
-
-    def prompt_player_national_id(self) -> str:
-        return input("Entrez l'identifiant national du joueur : ")
-
-    def display_invalid_choice(self) -> None:
-        print("Choix invalide, veuillez réessayer.")
-
     def display_player_added(self, player: Player) -> None:
         print(f"Joueur {player.first_name} {player.last_name} ajouté avec succès !")
 
     def display_player_add_error(self, error: Exception) -> None:
         print(f"Erreur lors de l'ajout du joueur : {error}")
+
+    def prompt_player_national_id(self) -> str:
+        return input("Entrez l'identifiant national du joueur : ")
+
+    def display_players(self, players: list[Player]) -> None:
+        for p in players:
+            print(f"ID: {p.national_id} | {p.first_name} {p.last_name} - {p.birth_date}")
 
     def display_no_players_found(self) -> None:
         print("Aucun joueur trouvé.")
@@ -47,5 +42,11 @@ class PlayerView:
     def display_player_not_found(self) -> None:
         print("Erreur : Aucun joueur trouvé avec cet identifiant.")
 
+    def display_player_updated(self, player: Player) -> None:
+        print(f"Joueur {player.first_name} {player.last_name} mis à jour avec succès !")
+
     def display_player_deleted(self, player: Player) -> None:
         print(f"Joueur {player.first_name} {player.last_name} supprimé avec succès !")
+
+    def display_invalid_choice(self) -> None:
+        print("Choix invalide, veuillez réessayer.")

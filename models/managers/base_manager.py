@@ -10,10 +10,6 @@ class BaseManager:
         self.file_path = self.create_file_path()
         self.data = self._load_data()
 
-    def create_file_path(self) -> str:
-        os.makedirs(os.path.dirname("data/"), exist_ok=True)
-        return f"data/{self.model_class.__name__.lower()}s.json"
-
     def save(self, instance: Any) -> None:
         if instance not in self.data:
             self.data.append(instance)
@@ -24,17 +20,6 @@ class BaseManager:
         with open(self.file_path, "w") as file:
             json.dump([instance.to_dict() for instance in self.data], file, indent=4)
 
-    def _load_data(self) -> list[Any]:
-        if not os.path.exists(self.file_path):
-            return []
-
-        try:
-            with open(self.file_path, "r") as file:
-                data_list = json.load(file)
-                return [self.model_class(**data) for data in data_list]
-        except (json.JSONDecodeError, FileNotFoundError):
-            return []
-
     def get_all(self) -> list[Any]:
         return self.data
 
@@ -42,3 +27,17 @@ class BaseManager:
         if instance in self.data:
             self.data.remove(instance)
             self._save_all()
+
+    def create_file_path(self) -> str:
+        os.makedirs(os.path.dirname("data/"), exist_ok=True)
+        return f"data/{self.model_class.__name__.lower()}s.json"
+
+    def _load_data(self) -> list[Any]:
+        if not os.path.exists(self.file_path):
+            return []
+        try:
+            with open(self.file_path, "r") as file:
+                data_list = json.load(file)
+                return [self.model_class(**data) for data in data_list]
+        except (json.JSONDecodeError, FileNotFoundError):
+            return []

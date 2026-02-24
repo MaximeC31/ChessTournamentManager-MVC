@@ -22,7 +22,7 @@ class Player:
 
         today = datetime.now()
         eighteen_years_ago = datetime(today.year - 18, today.month, today.day)
-        if not (year > 1900 and birth_date <= eighteen_years_ago):
+        if not (birth_date <= eighteen_years_ago):
             raise ValueError(f"Date de naissance invalide : le joueur doit être majeur")
 
         return value

@@ -13,8 +13,8 @@ class Tournament:
         self,
         name: str,
         venue: str,
-        start_date: str | datetime,
-        end_date: str | datetime | None,
+        s_date: str | datetime,
+        e_date: str | datetime | None,
         description: str,
         current_round_number: int,
         rounds: list[Any],
@@ -23,10 +23,8 @@ class Tournament:
     ) -> None:
         self.name = name
         self.venue = venue
-        self.start_date = (
-            datetime.fromisoformat(start_date) if isinstance(start_date, str) else start_date
-        )
-        self.end_date = datetime.fromisoformat(end_date) if isinstance(end_date, str) else end_date
+        self.s_date = datetime.fromisoformat(s_date) if isinstance(s_date, str) else s_date
+        self.e_date = datetime.fromisoformat(e_date) if isinstance(e_date, str) else e_date
         self.description = description
         self.current_round_number = current_round_number
         self.rounds = [r if isinstance(r, Round) else Round(**r) for r in rounds]
@@ -37,12 +35,12 @@ class Tournament:
         return {
             "name": self.name,
             "venue": self.venue,
-            "start_date": self.start_date.isoformat(),
-            "end_date": self.end_date.isoformat() if self.end_date else None,
+            "s_date": self.s_date.isoformat(),
+            "e_date": self.e_date.isoformat() if self.e_date else None,
             "description": self.description,
             "current_round_number": self.current_round_number,
             "rounds": [round.to_dict() for round in self.rounds],
-            "players": [player.to_dict() for player in self.players],
+            "players": [p.national_id for p in self.players],
             "number_of_rounds": self.number_of_rounds,
         }
 
@@ -61,12 +59,12 @@ class Tournament:
     def get_played_opponents(self, player: Player) -> set[str]:
         opponents: set[str] = set()
 
-        for round_obj in self.rounds:
-            for match in round_obj.matches:
-                if match.player_1.national_id == player.national_id and match.player_2:
+        for round in self.rounds:
+            for match in round.matches:
+                if player.national_id == match.player_1.national_id and match.player_2:
                     opponents.add(match.player_2.national_id)
 
-                if match.player_2 and match.player_2.national_id == player.national_id:
+                if player.national_id == match.player_2.national_id and match.player_2:
                     opponents.add(match.player_1.national_id)
 
         return opponents
@@ -87,20 +85,19 @@ class Tournament:
             p1 = sorted_players.pop(0)
             opponents_p1 = self.get_played_opponents(p1)
 
-            p2_match = None
-            for i, candidate in enumerate(sorted_players):
+            p2 = None
+            for index, candidate in enumerate(sorted_players):
                 if candidate.national_id not in opponents_p1:
-                    p2_match = sorted_players.pop(i)
+                    p2 = sorted_players.pop(index)
                     break
 
-            if not p2_match and sorted_players:
-                p2_match = sorted_players.pop(0)
+            if not p2 and sorted_players:
+                p2 = sorted_players.pop(0)
 
-            if p2_match:
-                matches.append(Match(player_1=p1, player_2=p2_match, score_1=0.0, score_2=0.0))
+            matches.append(Match(player_1=p1, player_2=p2, score_1=0.0, score_2=0.0))
 
         return Round(
             name=f"Round {self.current_round_number + 1}",
             matches=matches,
-            start_datetime=datetime.now(),
+            s_datetime=datetime.now(),
         )
