@@ -2,6 +2,7 @@ from models.entities.player import Player
 from models.entities.tournament import Tournament
 from models.managers.base_manager import BaseManager
 from views.tournament_view import TournamentView
+from datetime import datetime
 
 
 class TournamentController:
@@ -22,11 +23,10 @@ class TournamentController:
                 case "2":
                     self.list_tournaments()
                 case "3":
-                    # 1. Récupérer tous les tournois via le manager
-                    # 2. Demander à la vue de sélectionner un tournoi (select_tournament)
-                    # 3. Si un tournoi est sélectionné :
-                    #    - Appeler self.play_tournament(tournoi_selectionné)
-                    pass
+                    tournaments = self.tournament_manager.get_all()
+                    selected = self.view.select_tournament(tournaments)
+                    if selected:
+                        self.play_tournament(selected)
                 case "4":
                     self.delete_tournament()
                 case "0":
@@ -70,13 +70,32 @@ class TournamentController:
         tournament_list = self.tournament_manager.get_all()
         self.view.display_tournaments(tournament_list)
 
-    # def play_tournament(self, tournament):
-    # Boucle principale : tant que le nombre de rounds max n'est pas atteint
-    # A. Déterminer si on doit générer un nouveau round
-    # B. Récupérer le round actuel (le dernier de la liste)
-    # C. Saisir les résultats des matchs restants
-    # D. Clôturer le round
-    # E. Fin
+    def play_tournament(self, tournament: Tournament) -> None:
+        while tournament.current_round_number < tournament.number_of_rounds:
+            last_round = tournament.rounds[-1] if tournament.rounds else None
+
+            if not last_round or last_round.e_datetime:
+                current_round = tournament.generate_next_round()
+                tournament.rounds.append(current_round)
+                tournament.current_round_number += 1
+                self.tournament_manager.save(tournament)
+            else:
+                current_round = last_round
+
+            self.view.display_round_name(current_round.name)
+
+            for match in current_round.matches:
+                if not match.player_2 or (match.score_1 != 0 or match.score_2 != 0):
+                    continue
+
+                result = self.view.prompt_match_result(match.player_1, match.player_2)
+                match.set_result(result)
+                self.tournament_manager.save(tournament)
+
+            current_round.end_round(datetime.now())
+            self.tournament_manager.save(tournament)
+
+        self.view.display_ranking(tournament.players, tournament.get_player_score)
 
     def delete_tournament(self) -> None:
         tournaments = self.tournament_manager.get_all()
@@ -90,15 +109,18 @@ class TournamentController:
         self.view.display_tournament_deleted(tournament_to_delete.name)
 
     def resolve_tournament_players(self) -> None:
+        from typing import Any
         all_players = self.player_manager.get_all()
+        id_map: dict[str, Any] = {p.national_id: p for p in all_players}
 
         for tournament in self.tournament_manager.get_all():
-            matching_players: list[Player] = []
+            # 1. Résoudre les joueurs de la liste principale
+            tournament.players = [id_map[p_id] for p_id in tournament.players if p_id in id_map]
 
-            for p_id in tournament.players:
-                for p_full in all_players:
-                    if p_full.national_id == p_id:
-                        matching_players.append(p_full)
-                        break
-
-            tournament.players = matching_players
+            # 2. Résoudre les joueurs dans chaque match de chaque round
+            for round_obj in tournament.rounds:
+                for match in round_obj.matches:
+                    if match.player_1.national_id in id_map:
+                        match.player_1 = id_map[match.player_1.national_id]
+                    if match.player_2 and match.player_2.national_id in id_map:
+                        match.player_2 = id_map[match.player_2.national_id]

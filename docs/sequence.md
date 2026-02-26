@@ -1,4 +1,4 @@
-# Tournament Logic Diagram
+# Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -16,17 +16,23 @@ sequenceDiagram
     C->>DB: save()
 
     Note over C, DB: Déroulement Tournoi
-    loop Jusqu'à fin des rounds
-        C->>M: generate_next_round()
-        M-->>C: current_round
-        loop Pour chaque Match
+    loop Tant que round_actuel < round_max
+        alt Round précédent fini ou inexistant
+            C->>M: generate_next_round()
+            C->>DB: save()
+        else Round en cours
+            Note over C: Reprendre last_round
+        end
+
+        C->>V: display_round_name()
+        loop Pour chaque Match non joué
             C->>V: prompt_match_result(p1, p2)
-            V-->>C: score
-            C->>M: update_match_score()
+            V-->>C: result
+            C->>M: match.set_result(result)
             C->>DB: save()
         end
-        C->>M: end_round()
+        C->>M: round.end_round(now)
+        C->>DB: save()
     end
-    C->>M: end_tournament()
-    C->>DB: save()
+    C->>V: display_ranking(players)
 ```

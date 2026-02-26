@@ -1,3 +1,4 @@
+from typing import Any
 from datetime import datetime
 from models.entities.player import Player
 from models.entities.tournament import Tournament
@@ -152,3 +153,11 @@ class TournamentView:
 
     def display_invalid_choice(self) -> None:
         print("Choix invalide, veuillez réessayer.")
+
+    def display_ranking(self, players: list[Player], player_score_function: Any) -> None:
+        print("\n=== CLASSEMENT ===")
+        sorted_players = sorted(players, key=player_score_function, reverse=True)
+        for i, player in enumerate(sorted_players, start=1):
+            score = player_score_function(player)
+            print(f"{i}. {player.first_name} {player.last_name} - {score} pts")
+        print("==================\n")

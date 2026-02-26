@@ -28,7 +28,7 @@ class Tournament:
         self.description = description
         self.current_round_number = current_round_number
         self.rounds = [r if isinstance(r, Round) else Round(**r) for r in rounds]
-        self.players = [p if isinstance(p, Player) else Player(**p) for p in players]
+        self.players = players
         self.number_of_rounds = number_of_rounds
 
     def to_dict(self) -> Any:
@@ -49,9 +49,9 @@ class Tournament:
 
         for round in self.rounds:
             for match in round.matches:
-                if match.player_1 == player:
+                if match.player_1.national_id == player.national_id:
                     score += match.score_1
-                if match.player_2 == player:
+                if match.player_2 and match.player_2.national_id == player.national_id:
                     score += match.score_2
 
         return score
@@ -61,11 +61,11 @@ class Tournament:
 
         for round in self.rounds:
             for match in round.matches:
-                if player.national_id == match.player_1.national_id and match.player_2:
-                    opponents.add(match.player_2.national_id)
-
-                if player.national_id == match.player_2.national_id and match.player_2:
-                    opponents.add(match.player_1.national_id)
+                if match.player_2:
+                    if player.national_id == match.player_1.national_id:
+                        opponents.add(match.player_2.national_id)
+                    elif player.national_id == match.player_2.national_id:
+                        opponents.add(match.player_1.national_id)
 
         return opponents
 

@@ -39,26 +39,28 @@ class Match:
                 raise ValueError("Résultat invalide. Utilisez '1', '2' ou 'draw'.")
 
     def to_tuple(self) -> tuple[list[Any], list[Any]]:
-        p1_data: list[Any] = [self.player_1.to_dict(), self.score_1]
-        p2_data: list[Any] = [self.player_2.to_dict() if self.player_2 else None, self.score_2]
+        p1_data: list[Any] = [self.player_1.national_id, self.score_1]
+        p2_data: list[Any] = [self.player_2.national_id if self.player_2 else None, self.score_2]
         return (p1_data, p2_data)
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "player_1": self.player_1.to_dict(),
-            "player_2": self.player_2.to_dict() if self.player_2 else None,
+            "player_1": self.player_1.national_id,
+            "player_2": self.player_2.national_id if self.player_2 else None,
             "score_1": self.score_1,
             "score_2": self.score_2,
         }
 
     @classmethod
     def from_tuple(cls, data: Any) -> "Match":
-        player_1_data, score_1 = data[0]
-        player_2_data, score_2 = data[1]
+        p1_id, score_1 = data[0]
+        p2_id, score_2 = data[1]
 
+        # On crée des objets Player temporaires avec seulement l'ID
+        # Le Controller les remplacera par les vrais objets complets
         return cls(
-            player_1=Player(**player_1_data),
-            player_2=Player(**player_2_data) if player_2_data else None,
+            player_1=Player(last_name="", first_name="", birth_date="1900-01-01", national_id=p1_id),
+            player_2=Player(last_name="", first_name="", birth_date="1900-01-01", national_id=p2_id) if p2_id else None,
             score_1=float(score_1),
             score_2=float(score_2),
         )
