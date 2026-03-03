@@ -13,9 +13,7 @@ class Round:
         e_datetime: str | datetime | None = None,
     ) -> None:
         self.name = name
-        self.matches: list[Any] = [
-            m if isinstance(m, Match) else Match.from_tuple(m) for m in matches
-        ]
+        self.matches = [m if isinstance(m, Match) else Match.from_tuple(m) for m in matches]
         self.s_datetime = (
             datetime.fromisoformat(s_datetime) if isinstance(s_datetime, str) else s_datetime
         )
@@ -25,6 +23,10 @@ class Round:
 
     def end_round(self, value: datetime) -> None:
         self.e_datetime = value
+
+    @property
+    def e_datetime_display(self) -> str:
+        return self.e_datetime.strftime("%Y-%m-%d %H:%M") if self.e_datetime else "En cours"
 
     def to_dict(self) -> dict[str, Any]:
         return {

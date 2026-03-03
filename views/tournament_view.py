@@ -88,8 +88,7 @@ class TournamentView:
 
         print("Liste des tournois :")
         for t in tournaments:
-            e_date = t.e_date.strftime("%Y-%m-%d") if t.e_date else "En cours"
-            print(f"- {t.name} | Dates: {t.s_date.strftime('%Y-%m-%d')} - {e_date}")
+            print(f"- {t.name} | Dates: {t.s_date.strftime('%Y-%m-%d')} - {t.e_date_display}")
 
     def select_tournament(self, tournaments: list[Tournament]) -> Tournament | None:
         if not tournaments:
@@ -155,9 +154,8 @@ class TournamentView:
         print("Choix invalide, veuillez réessayer.")
 
     def display_ranking(self, players: list[Player], player_score_function: Any) -> None:
-        print("\n=== CLASSEMENT ===")
+        print("=== CLASSEMENT ===")
         sorted_players = sorted(players, key=player_score_function, reverse=True)
         for i, player in enumerate(sorted_players, start=1):
             score = player_score_function(player)
             print(f"{i}. {player.first_name} {player.last_name} - {score} pts")
-        print("==================\n")

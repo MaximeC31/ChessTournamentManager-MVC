@@ -15,7 +15,7 @@ class PlayerView:
         return choice
 
     def prompt_player_info(self) -> dict[str, str]:
-        player_info: dict[str, str] = {
+        player_info = {
             "first_name": input("Entrez le prénom du joueur : "),
             "last_name": input("Entrez le nom du joueur : "),
             "birth_date": input("Entrez la date de naissance du joueur (YYYY-MM-DD) : "),
@@ -41,9 +41,6 @@ class PlayerView:
 
     def display_player_not_found(self) -> None:
         print("Erreur : Aucun joueur trouvé avec cet identifiant.")
-
-    def display_player_updated(self, player: Player) -> None:
-        print(f"Joueur {player.first_name} {player.last_name} mis à jour avec succès !")
 
     def display_player_deleted(self, player: Player) -> None:
         print(f"Joueur {player.first_name} {player.last_name} supprimé avec succès !")

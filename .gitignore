@@ -5,5 +5,6 @@ flake8_rapport/
 .env
 .vscode/
 data/
+reports/
 specifications-techniques.pdf
 .DS_Store

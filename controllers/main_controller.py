@@ -2,6 +2,7 @@ import sys
 from views.main_view import MainView
 from controllers.player_controller import PlayerController
 from controllers.tournament_controller import TournamentController
+from controllers.report_controller import ReportController
 
 
 class MainController:
@@ -35,7 +36,8 @@ class MainController:
         tournament_controller.run()
 
     def handle_reports_menu(self) -> None:
-        pass  # À implémenter : Gérer le menu des rapports
+        report_controller = ReportController()
+        report_controller.run()
 
     def exit_application(self) -> None:
         self.view.display_exit_message()
