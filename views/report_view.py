@@ -25,7 +25,8 @@ class ReportView:
         print("=== LISTE DES JOUEURS (ORDRE ALPHABÉTIQUE) ===")
         for player in players:
             print(
-                f"ID: {player.national_id} | {player.first_name} {player.last_name} - {player.birth_date}"
+                f"ID: {player.national_id} | {player.first_name} "
+                f"{player.last_name} - {player.birth_date}"
             )
 
     def display_tournaments_list(self, tournaments: list[Tournament]) -> None:
@@ -36,27 +37,41 @@ class ReportView:
         print("=== LISTE DES TOURNOIS ===")
         for t in tournaments:
             print(
-                f"- {t.name} | Lieu: {t.venue} | Dates: {t.s_date.strftime('%Y-%m-%d')} - {t.e_date_display}"
+                f"- {t.name} | Lieu: {t.venue} | Dates: "
+                f"{t.s_date.strftime('%Y-%m-%d')} - {t.e_date_display}"
             )
 
     def display_tournament_details(self, tournament: Tournament) -> None:
         print("=== DÉTAILS DU TOURNOI ===")
         print(f"Nom: {tournament.name}")
         print(f"Lieu: {tournament.venue}")
-        print(f"Dates: {tournament.s_date.strftime('%Y-%m-%d')} - {tournament.e_date_display}")
+        print(
+            f"Dates: {tournament.s_date.strftime('%Y-%m-%d')} - "
+            f"{tournament.e_date_display}"
+        )
         print(f"Description: {tournament.description}")
-        print(f"Tours: {tournament.current_round_number}/{tournament.number_of_rounds}")
+        print(
+            f"Tours: {tournament.current_round_number}/"
+            f"{tournament.number_of_rounds}"
+        )
 
-    def display_tournament_players(self, tournament: Tournament, players: list[Player]) -> None:
+    def display_tournament_players(
+        self, tournament: Tournament, players: list[Player]
+    ) -> None:
         if not players:
             self.display_no_players()
             return
 
         print(f"=== JOUEURS DU TOURNOI: {tournament.name} ===")
         for player in players:
-            print(f"- {player.first_name} {player.last_name} ({player.national_id})")
+            print(
+                f"- {player.first_name} {player.last_name} "
+                f"({player.national_id})"
+            )
 
-    def display_rounds_matches(self, tournament: Tournament, id_map: dict[str, Player]) -> None:
+    def display_rounds_matches(
+        self, tournament: Tournament, id_map: dict[str, Player]
+    ) -> None:
         print(f"=== TOURS ET MATCHS: {tournament.name} ===")
 
         if not tournament.rounds:
@@ -72,19 +87,31 @@ class ReportView:
 
             for match in round.matches:
                 p1 = id_map.get(match.player_1)
-                p1_name = f"{p1.first_name} {p1.last_name}" if p1 else match.player_1
+                p1_name = (
+                    f"{p1.first_name} {p1.last_name}"
+                    if p1 else match.player_1
+                )
                 if match.player_2:
                     p2 = id_map.get(match.player_2)
-                    p2_name = f"{p2.first_name} {p2.last_name}" if p2 else match.player_2
+                    p2_name = (
+                        f"{p2.first_name} {p2.last_name}"
+                        if p2 else match.player_2
+                    )
                 else:
                     p2_name = "BYE"
-                print(f"  {p1_name} ({match.score_1}) vs {p2_name} ({match.score_2})")
+                print(
+                    f"  {p1_name} ({match.score_1}) vs "
+                    f"{p2_name} ({match.score_2})"
+                )
 
     def generate_players_html(self, players: list[Player]) -> str:
         html = "<h1>Liste des joueurs (ordre alphabétique)</h1>"
         html += "<ul>"
         for player in players:
-            html += f"<li>ID: {player.national_id} | {player.first_name} {player.last_name} - {player.birth_date}</li>"
+            html += (
+                f"<li>ID: {player.national_id} | {player.first_name} "
+                f"{player.last_name} - {player.birth_date}</li>"
+            )
         html += "</ul>"
         return self._wrap_html(html)
 
@@ -92,16 +119,29 @@ class ReportView:
         html = "<h1>Liste des tournois</h1>"
         html += "<ul>"
         for t in tournaments:
-            html += f"<li>{t.name} | Lieu: {t.venue} | Dates: {t.s_date.strftime('%Y-%m-%d')} - {t.e_date_display}</li>"
+            html += (
+                f"<li>{t.name} | Lieu: {t.venue} | Dates: "
+                f"{t.s_date.strftime('%Y-%m-%d')} - {t.e_date_display}</li>"
+            )
         html += "</ul>"
         return self._wrap_html(html)
 
     def generate_tournament_details_html(self, tournament: Tournament) -> str:
         html = f"<h1>{tournament.name}</h1>"
         html += f"<p><strong>Lieu:</strong> {tournament.venue}</p>"
-        html += f"<p><strong>Dates:</strong> {tournament.s_date.strftime('%Y-%m-%d')} - {tournament.e_date_display}</p>"
-        html += f"<p><strong>Description:</strong> {tournament.description}</p>"
-        html += f"<p><strong>Tours:</strong> {tournament.current_round_number}/{tournament.number_of_rounds}</p>"
+        html += (
+            f"<p><strong>Dates:</strong> "
+            f"{tournament.s_date.strftime('%Y-%m-%d')} - "
+            f"{tournament.e_date_display}</p>"
+        )
+        html += (
+            f"<p><strong>Description:</strong> {tournament.description}</p>"
+        )
+        html += (
+            f"<p><strong>Tours:</strong> "
+            f"{tournament.current_round_number}/"
+            f"{tournament.number_of_rounds}</p>"
+        )
         return self._wrap_html(html)
 
     def generate_tournament_players_html(
@@ -110,7 +150,10 @@ class ReportView:
         html = f"<h1>Joueurs du tournoi: {tournament.name}</h1>"
         html += "<ul>"
         for player in players:
-            html += f"<li>{player.first_name} {player.last_name} ({player.national_id})</li>"
+            html += (
+                f"<li>{player.first_name} {player.last_name} "
+                f"({player.national_id})</li>"
+            )
         html += "</ul>"
         return self._wrap_html(html)
 
@@ -125,25 +168,39 @@ class ReportView:
 
         for round in tournament.rounds:
             html += f"<h2>{round.name}</h2>"
-            html += f"<p><strong>Début:</strong> {round.s_datetime.strftime('%Y-%m-%d %H:%M')}</p>"
+            html += (
+                f"<p><strong>Début:</strong> "
+                f"{round.s_datetime.strftime('%Y-%m-%d %H:%M')}</p>"
+            )
             html += f"<p><strong>Fin:</strong> {round.e_datetime_display}</p>"
             html += "<h3>Matchs</h3><ul>"
 
             for match in round.matches:
                 p1 = id_map.get(match.player_1)
-                p1_name = f"{p1.first_name} {p1.last_name}" if p1 else match.player_1
+                p1_name = (
+                    f"{p1.first_name} {p1.last_name}"
+                    if p1 else match.player_1
+                )
                 if match.player_2:
                     p2 = id_map.get(match.player_2)
-                    p2_name = f"{p2.first_name} {p2.last_name}" if p2 else match.player_2
+                    p2_name = (
+                        f"{p2.first_name} {p2.last_name}"
+                        if p2 else match.player_2
+                    )
                 else:
                     p2_name = "BYE"
-                html += f"<li>{p1_name} ({match.score_1}) vs {p2_name} ({match.score_2})</li>"
+                html += (
+                    f"<li>{p1_name} ({match.score_1}) vs "
+                    f"{p2_name} ({match.score_2})</li>"
+                )
 
             html += "</ul>"
 
         return self._wrap_html(html)
 
-    def select_tournament(self, tournaments: list[Tournament]) -> Tournament | None:
+    def select_tournament(
+        self, tournaments: list[Tournament]
+    ) -> Tournament | None:
         if not tournaments:
             print("Aucun tournoi trouvé.")
             return None
@@ -153,7 +210,9 @@ class ReportView:
             print(f"{i}. {tournament.name}")
 
         while True:
-            choice = input("Entrez le numéro du tournoi (ou 0 pour annuler) : ").strip()
+            choice = input(
+                "Entrez le numéro du tournoi (ou 0 pour annuler) : "
+            ).strip()
 
             if choice == "0":
                 return None

@@ -25,13 +25,24 @@ class Tournament:
         self.player_manager = BaseManager(Player)
         self.name = name
         self.venue = venue
-        self.s_date = datetime.fromisoformat(s_date) if isinstance(s_date, str) else s_date
-        self.e_date = datetime.fromisoformat(e_date) if isinstance(e_date, str) else e_date
+        self.s_date = (
+            datetime.fromisoformat(s_date)
+            if isinstance(s_date, str)
+            else s_date
+        )
+        self.e_date = (
+            datetime.fromisoformat(e_date)
+            if isinstance(e_date, str)
+            else e_date
+        )
         self.description = description
         self.current_round_number = current_round_number
-        self.rounds: list[Round] = [r if isinstance(r, Round) else Round(**r) for r in rounds]
+        self.rounds: list[Round] = [
+            r if isinstance(r, Round) else Round(**r) for r in rounds
+        ]
         self.players = [
-            p if isinstance(p, Player) else self.player_manager.get_by_id(p) for p in players
+            p if isinstance(p, Player) else self.player_manager.get_by_id(p)
+            for p in players
         ]
         self.number_of_rounds = number_of_rounds
 
@@ -78,7 +89,9 @@ class Tournament:
         return opponents
 
     def generate_next_round(self) -> Round:
-        sorted_players = sorted(self.players, key=self.get_player_score, reverse=True)
+        sorted_players = sorted(
+            self.players, key=self.get_player_score, reverse=True
+        )
 
         if not self.rounds:
             random.shuffle(sorted_players)
@@ -90,7 +103,12 @@ class Tournament:
         if len(sorted_players) % 2 == 1:
             bye_player = sorted_players.pop()
             matches.append(
-                Match(player_1=bye_player.national_id, player_2=None, score_1=1.0, score_2=0.0)
+                Match(
+                    player_1=bye_player.national_id,
+                    player_2=None,
+                    score_1=1.0,
+                    score_2=0.0,
+                )
             )
 
         while sorted_players:
@@ -121,7 +139,9 @@ class Tournament:
             s_datetime=datetime.now(),
         )
 
-    def _shuffle_tied_players(self, sorted_players: list[Player]) -> list[Player]:
+    def _shuffle_tied_players(
+        self, sorted_players: list[Player]
+    ) -> list[Player]:
         result: list[Player] = []
         group: list[Player] = []
         current_score: float | None = None

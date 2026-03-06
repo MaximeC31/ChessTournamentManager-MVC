@@ -1,7 +1,7 @@
 venv/
 __pycache__/
 *.pyc
-flake8_rapport/
+flake8-report/
 .env
 .vscode/
 data/

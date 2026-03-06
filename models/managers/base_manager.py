@@ -18,7 +18,9 @@ class BaseManager:
     def _save_all(self) -> None:
         os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
         with open(self.file_path, "w") as file:
-            json.dump([instance.to_dict() for instance in self.data], file, indent=4)
+            json.dump(
+                [instance.to_dict() for instance in self.data], file, indent=4
+            )
 
     def get_by_id(self, instance_id: Any) -> Any:
         for item in self.data:
