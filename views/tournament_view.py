@@ -48,7 +48,9 @@ class TournamentView:
                 print("Format invalide. Laissez vide ou respectez YYYY-MM-DD.")
 
         rounds_input = input("Nombre de tours (défaut 4) : ")
-        input_data["rounds"] = int(rounds_input) if rounds_input.isdigit() else 4
+        input_data["rounds"] = (
+            int(rounds_input) if rounds_input.isdigit() else 4
+        )
         input_data["current_round_number"] = 0
 
         return input_data
@@ -60,7 +62,9 @@ class TournamentView:
             print(f"{index}. {player.first_name} {player.last_name}")
 
         while True:
-            choice = input("Sélectionnez les joueurs (ex: 1,2,3... ou 'all') : ").strip()
+            choice = input(
+                "Sélectionnez les joueurs (ex: 1,2,3... ou 'all') : "
+            ).strip()
 
             if choice.lower() == "all":
                 return players
@@ -70,7 +74,10 @@ class TournamentView:
                 selected_players = [players[i - 1] for i in selected_indices]
                 return selected_players
             except (ValueError, IndexError):
-                print("Entrée invalide. Veuillez entrer des indices valides ou 'all'.")
+                print(
+                    "Entrée invalide. Veuillez entrer des indices "
+                    "valides ou 'all'."
+                )
 
     def display_not_enough_players(self) -> None:
         print("Il faut au moins 2 joueurs pour créer un tournoi.")
@@ -88,9 +95,14 @@ class TournamentView:
 
         print("Liste des tournois :")
         for t in tournaments:
-            print(f"- {t.name} | Dates: {t.s_date.strftime('%Y-%m-%d')} - {t.e_date_display}")
+            print(
+                f"- {t.name} | Dates: {t.s_date.strftime('%Y-%m-%d')} - "
+                f"{t.e_date_display}"
+            )
 
-    def select_tournament(self, tournaments: list[Tournament]) -> Tournament | None:
+    def select_tournament(
+        self, tournaments: list[Tournament]
+    ) -> Tournament | None:
         if not tournaments:
             print("Aucun tournoi disponible.")
             return None
@@ -100,7 +112,9 @@ class TournamentView:
             print(f"{i}. {tournament.name}")
 
         while True:
-            choice = input("Entrez le numéro du tournoi (ou 0 pour annuler) : ").strip()
+            choice = input(
+                "Entrez le numéro du tournoi (ou 0 pour annuler) : "
+            ).strip()
 
             if choice == "0":
                 return None
@@ -128,8 +142,8 @@ class TournamentView:
 
         while True:
             result = input(
-                f"Entrez le résultat (1 victoire {p1.first_name} {p1.last_name}, "
-                f"2 victoire {p2_name}, draw Match nul) : "
+                f"Entrez le résultat (1 victoire {p1.first_name} "
+                f"{p1.last_name}, 2 victoire {p2_name}, draw Match nul) : "
             )
 
             if result not in ["1", "2", "draw"]:
@@ -153,9 +167,13 @@ class TournamentView:
     def display_invalid_choice(self) -> None:
         print("Choix invalide, veuillez réessayer.")
 
-    def display_ranking(self, players: list[Player], player_score_function: Any) -> None:
+    def display_ranking(
+        self, players: list[Player], player_score_function: Any
+    ) -> None:
         print("=== CLASSEMENT ===")
-        sorted_players = sorted(players, key=player_score_function, reverse=True)
+        sorted_players = sorted(
+            players, key=player_score_function, reverse=True
+        )
         for i, player in enumerate(sorted_players, start=1):
             score = player_score_function(player)
             print(f"{i}. {player.first_name} {player.last_name} - {score} pts")

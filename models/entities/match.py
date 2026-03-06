@@ -4,7 +4,11 @@ from typing import Any
 class Match:
 
     def __init__(
-        self, player_1: str, player_2: str | None, score_1: float, score_2: float
+        self,
+        player_1: str,
+        player_2: str | None,
+        score_1: float,
+        score_2: float,
     ) -> None:
         self.player_1 = player_1
         self.player_2 = player_2
@@ -35,7 +39,9 @@ class Match:
                 self.score_2 = 0.5
                 return None
             case _:
-                raise ValueError("Résultat invalide. Utilisez '1', '2' ou 'draw'.")
+                raise ValueError(
+                    "Résultat invalide. Utilisez '1', '2' ou 'draw'."
+                )
 
     def to_tuple(self) -> tuple[list[Any], list[Any]]:
         p1_data: list[Any] = [self.player_1, self.score_1]

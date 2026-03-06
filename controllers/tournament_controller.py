@@ -22,7 +22,9 @@ class TournamentController:
                 case "2":
                     self.list_tournaments()
                 case "3":
-                    selected = self.view.select_tournament(self.tournament_manager.get_all())
+                    selected = self.view.select_tournament(
+                        self.tournament_manager.get_all()
+                    )
                     if selected:
                         self.play_tournament(selected)
                 case "4":
@@ -53,7 +55,9 @@ class TournamentController:
                     s_date=str(tournament_info["s_date"]),
                     e_date=final_e_date,
                     description=str(tournament_info["description"]),
-                    current_round_number=int(tournament_info["current_round_number"]),
+                    current_round_number=int(
+                        tournament_info["current_round_number"]
+                    ),
                     rounds=[],
                     players=selected_players,
                     number_of_rounds=int(tournament_info["rounds"]),
@@ -69,25 +73,35 @@ class TournamentController:
         self.view.display_tournaments(tournament_list)
 
     def play_tournament(self, tournament: Tournament) -> None:
-        if tournament.current_round_number >= tournament.number_of_rounds:
-            self.view.display_ranking(tournament.players, tournament.get_player_score)
+        last_round = tournament.rounds[-1] if tournament.rounds else None
+        tournament_finished = (
+            tournament.current_round_number >= tournament.number_of_rounds
+            and (not last_round or last_round.e_datetime)
+        )
+        if tournament_finished:
+            self.view.display_ranking(
+                tournament.players, tournament.get_player_score
+            )
             return
 
-        while tournament.current_round_number < tournament.number_of_rounds:
+        while True:
             last_round = tournament.rounds[-1] if tournament.rounds else None
-
-            if not last_round or last_round.e_datetime:
+            if last_round and not last_round.e_datetime:
+                current_round = last_round
+            elif tournament.current_round_number < tournament.number_of_rounds:
                 current_round = tournament.generate_next_round()
                 tournament.rounds.append(current_round)
                 tournament.current_round_number += 1
                 self.tournament_manager.save(tournament)
             else:
-                current_round = last_round
+                break
 
             self.view.display_round_name(current_round.name)
 
             for match in current_round.matches:
-                if not match.player_2 or (match.score_1 != 0 or match.score_2 != 0):
+                if not match.player_2 or (
+                    match.score_1 != 0 or match.score_2 != 0
+                ):
                     continue
 
                 p1 = self.get_player_by_id(tournament, match.player_1)
@@ -103,7 +117,9 @@ class TournamentController:
             tournament.e_date = datetime.now()
             self.tournament_manager.save(tournament)
 
-        self.view.display_ranking(tournament.players, tournament.get_player_score)
+        self.view.display_ranking(
+            tournament.players, tournament.get_player_score
+        )
 
     def delete_tournament(self) -> None:
         tournaments = self.tournament_manager.get_all()
@@ -116,8 +132,12 @@ class TournamentController:
         self.tournament_manager.delete(tournament_to_delete)
         self.view.display_tournament_deleted(tournament_to_delete.name)
 
-    def get_player_by_id(self, tournament: Tournament, national_id: str) -> Player:
+    def get_player_by_id(
+        self, tournament: Tournament, national_id: str
+    ) -> Player:
         for player in tournament.players:
             if player.national_id == national_id:
                 return player
-        raise ValueError(f"Joueur {national_id} introuvable dans le tournoi.")
+        raise ValueError(
+            f"Joueur {national_id} introuvable dans le tournoi."
+        )

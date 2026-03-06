@@ -54,22 +54,30 @@ class ReportController:
 
         if tournament:
             self.view.display_tournament_details(tournament)
-            html_content = self.view.generate_tournament_details_html(tournament)
-            self.view.export_to_file(f"tournoi_{tournament.name}", html_content)
+            html_content = self.view.generate_tournament_details_html(
+                tournament
+            )
+            self.view.export_to_file(
+                f"tournoi_{tournament.name}", html_content
+            )
 
     def show_tournament_players_alpha(self) -> None:
         tournaments = self.tournament_manager.get_all()
         tournament = self.view.select_tournament(tournaments)
 
         if tournament:
-            sorted_players = sorted(tournament.players, key=lambda p: p.last_name.lower())
+            sorted_players = sorted(
+                tournament.players, key=lambda p: p.last_name.lower()
+            )
             self.view.display_tournament_players(tournament, sorted_players)
 
             if sorted_players:
                 html_content = self.view.generate_tournament_players_html(
                     tournament, sorted_players
                 )
-                self.view.export_to_file(f"joueurs_{tournament.name}", html_content)
+                self.view.export_to_file(
+                    f"joueurs_{tournament.name}", html_content
+                )
 
     def show_tournament_rounds_matches(self) -> None:
         tournaments = self.tournament_manager.get_all()
@@ -78,5 +86,7 @@ class ReportController:
         if tournament:
             id_map = {p.national_id: p for p in tournament.players}
             self.view.display_rounds_matches(tournament, id_map)
-            html_content = self.view.generate_rounds_matches_html(tournament, id_map)
+            html_content = self.view.generate_rounds_matches_html(
+                tournament, id_map
+            )
             self.view.export_to_file(f"tours_{tournament.name}", html_content)

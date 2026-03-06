@@ -1,11 +1,11 @@
 class MainView:
 
     def display_main_menu(self) -> str:
-        print(f"=== MENU PRINCIPAL ===")
+        print("=== MENU PRINCIPAL ===")
         print("1 - Gérer les joueurs")
         print("2 - Gérer les tournois")
         print("3 - Gérer les rapports")
-        print(f"0 - Quitter l'application")
+        print("0 - Quitter l'application")
 
         choice = input("Veuillez entrer votre choix : ")
         return choice

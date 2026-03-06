@@ -18,13 +18,20 @@ class PlayerView:
         player_info = {
             "first_name": input("Entrez le prénom du joueur : "),
             "last_name": input("Entrez le nom du joueur : "),
-            "birth_date": input("Entrez la date de naissance du joueur (YYYY-MM-DD) : "),
-            "national_id": input("Entrez l'identifiant national du joueur : "),
+            "birth_date": input(
+                "Entrez la date de naissance du joueur (YYYY-MM-DD) : "
+            ),
+            "national_id": input(
+                "Entrez l'identifiant national du joueur : "
+            ),
         }
         return player_info
 
     def display_player_added(self, player: Player) -> None:
-        print(f"Joueur {player.first_name} {player.last_name} ajouté avec succès !")
+        print(
+            f"Joueur {player.first_name} {player.last_name} "
+            "ajouté avec succès !"
+        )
 
     def display_player_add_error(self, error: Exception) -> None:
         print(f"Erreur lors de l'ajout du joueur : {error}")
@@ -34,7 +41,10 @@ class PlayerView:
 
     def display_players(self, players: list[Player]) -> None:
         for p in players:
-            print(f"ID: {p.national_id} | {p.first_name} {p.last_name} - {p.birth_date}")
+            print(
+                f"ID: {p.national_id} | {p.first_name} {p.last_name} - "
+                f"{p.birth_date}"
+            )
 
     def display_no_players_found(self) -> None:
         print("Aucun joueur trouvé.")
@@ -43,7 +53,10 @@ class PlayerView:
         print("Erreur : Aucun joueur trouvé avec cet identifiant.")
 
     def display_player_deleted(self, player: Player) -> None:
-        print(f"Joueur {player.first_name} {player.last_name} supprimé avec succès !")
+        print(
+            f"Joueur {player.first_name} {player.last_name} "
+            "supprimé avec succès !"
+        )
 
     def display_invalid_choice(self) -> None:
         print("Choix invalide, veuillez réessayer.")
